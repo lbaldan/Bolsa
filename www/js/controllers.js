@@ -61,25 +61,36 @@ angular.module('Bolsa.controllers', [])
 
 }])
 
-.controller('StockCtrl',['$scope','$stateParams','stockDataService',
- function($scope, $stateParams,stockDataService) {
+.controller('StockCtrl',['$scope','$stateParams','stockDataService','dateService',
+ function($scope, $stateParams,stockDataService,dateService) {
 
     $scope.ticker = $stateParams.stockTicker;
+    $scope.chartView = 1;
+
+    console.log(dateService.currentDate(1));
+    console.log(dateService.oneYearAgorDate(1));
 
     $scope.$on("$ionicView.afterEnter",function(){
       getPriceData();
       getDetailsData();
     });
 
+    $scope.chartViewFunc = function(n){
+      $scope.chartView = n;
+      return true;
+    };
+
     function getPriceData() {
       stockDataService.getPriceData($scope.ticker).then(function(data){
         console.log(data);
+        $scope.stockPriceData = data;
       });
     }
 
     function getDetailsData() {
       stockDataService.getDetailsData($scope.ticker).then(function(data){
         console.log(data);
+        $scope.stockDetailsData = data;
       });
     }
 }]);
